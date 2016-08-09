@@ -11,40 +11,39 @@ import re
 import subprocess
 import sys
 import time
+import argparse
 
 import picamera
 
 # Regex to provide a unique'ish identifier for naming image capture files.
 hwaddr_pat = re.compile('HWaddr [0-9a-fA-F]{1,2}:[0-9a-fA-F]{1,2}:[0-9a-fA-F]{1,2}:([0-9a-fA-F]{1,2}:[0-9a-fA-F]{1,2}:[0-9a-fA-F]{1,2})')
 
-# Credit to Hitchhiker's Guide to Python
-try:
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        def emit(self, record):
-            pass
+# Enable debug logging to screen if true
+debug = False
+
+# Default sleep time between image captures
+default_wait = 10
+default_path = "/tmp"
 
 class PyPiCamCapper():
-    logger = logging.getLogger(__name__)#.addHandler(NullHandler)
-    logger_handler = logging.StreamHandler(sys.stdout)
-    logger_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
-    logger_handler.setLevel(logging.DEBUG)
-    logger.addHandler(logger_handler)
-    logger.setLevel(logging.DEBUG)
-
-    cap_path = "/tmp"
-    cap_wait = 5 # seconds
-    stitch_cleanup = False
-
-    def __init__(self, *args, **kwargs):
+    def __init__(self, path=default_path, wait=default_wait):
         """
         Initialize the picamera object at the time we create a PyPiCamCapper instance.
 
         :param args:
         :param kwargs:
         """
+        self.cap_path = path
+        self.cap_wait = wait
         self.cam = picamera.PiCamera()
+        self.logger = logging.getLogger(__name__)  # .addHandler(NullHandler)
+
+        if debug:
+            logger_handler = logging.StreamHandler(sys.stdout)
+            logger_handler.setFormatter(logging.Formatter('%(asctime)s %(message)s'))
+            logger_handler.setLevel(logging.DEBUG)
+            self.logger.addHandler(logger_handler)
+            self.logger.setLevel(logging.DEBUG)
 
     @property
     def fname(self):
@@ -86,11 +85,21 @@ class PyPiCamCapper():
             time.sleep(self.cap_wait)
 
 if __name__ == '__main__':
-    x = PyPiCamCapper()
-    x.cap_path = "/var/www/html"
+    parser = argparse.ArgumentParser(description="Capture images from camera module")
+    parser.add_argument("--debug", "-d",
+                        action='store_true',
+                        help="Enable debugging messages")
+    parser.add_argument("--time", "-t", default=default_wait,
+                        help="Time between image captures")
+    parser.add_argument("--output", "-o", default=default_path,
+                        help="Default output path")
+
+    args = parser.parse_args()
+    if args.debug:
+        debug = True
+
+    x = PyPiCamCapper(path=args.output, wait=int(args.time))
     try:
         x.run()
     except KeyboardInterrupt:
         x.logger.info("Capture complete.")
-        pass
-        # x.stitch()

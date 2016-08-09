@@ -2,8 +2,6 @@
 
 pypicamcapper is a script which uses the pycamera module to periodcally capture images from a raspberry pi camera module.
 
-At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
-
 ## Motivation
 
 This script provides part of the solution I'm building to capture images of my wedding to build timelapse photo/videos 

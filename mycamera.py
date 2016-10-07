@@ -48,11 +48,15 @@ class CamCapper():
     def __init__(self,
                  prefix="wc",
                  delay=2,
-                 target_dir="/tmp"):
+                 target_dir="/tmp",
+                 rotate=False):
         self.prefix = prefix
         self.delay = delay
         self.target_dir = target_dir
         self.cam = picamera.PiCamera()
+        self.cam.led = True
+        if rotate:
+            self.cam.rotation = 180
 
     def take_snapshot(self):
         ds = datetime.datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
@@ -89,7 +93,8 @@ if __name__ == '__main__':
     lamp1 = Lamp(LED1_GPIO)
     lamp2 = Lamp(LED2_GPIO)
     trigger = Button(BUTTON_GPIO)
-    cam = CamCapper(target_dir='/var/www/html')
+    cam = CamCapper(target_dir='/var/www/html',
+                    rotate=True)
 
     try:
         while True:
@@ -102,6 +107,6 @@ if __name__ == '__main__':
 
     except KeyboardInterrupt:
         print("Shutting down")
-        do_blink(lamp2, 2, 4)
+        do_blink(lamp2, 4)
         GPIO.cleanup()
         print("Exiting")

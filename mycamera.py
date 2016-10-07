@@ -76,11 +76,11 @@ def do_blink(lamp, count=1, delay=0.5):
 
 def warn_message(*leds):
     if len(leds) >= 2:
-        do_blink(leds[0], 4)
+        do_blink(leds[0], 4, 0.5)
         do_blink(leds[1], 1)
     else:
-        do_blink(leds[0], 4)
-        do_blink(leds[0], 1, 5)
+        do_blink(leds[0], 4, 0.5)
+        do_blink(leds[0], 1, 1)
 
     for l in leds:
         l.off()

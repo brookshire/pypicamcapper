@@ -2,7 +2,7 @@
 #  Copyright (C) 2016 David Brookshire <dave@brookshire.org>
 #
 import time
-import picamera
+# import picamera
 import datetime
 import os
 
@@ -53,8 +53,8 @@ class CamCapper():
         self.prefix = prefix
         self.delay = delay
         self.target_dir = target_dir
-        self.cam = picamera.PiCamera()
-        self.cam.led = True
+        # self.cam = picamera.PiCamera()
+        # self.cam.led = True
         if rotate:
             self.cam.rotation = 180
 
@@ -62,8 +62,8 @@ class CamCapper():
         ds = datetime.datetime.now().strftime("%Y.%m.%d.%H.%M.%S")
         fname = os.path.join(self.target_dir,
                              self.prefix + "." + ds + ".jpg")
-        self.cam.capture(fname)
-        time.sleep(self.delay)
+        # self.cam.capture(fname)
+        # time.sleep(self.delay)
 
 def do_blink(lamp, count=1, delay=0.5):
     while count:
@@ -82,8 +82,8 @@ def warn_message(*leds):
         do_blink(leds[0], 4, 0.5)
         do_blink(leds[0], 1, 1)
 
-    for l in leds:
-        l.off()
+    # for l in leds:
+    #     l.off()
 
 if __name__ == '__main__':
 
@@ -93,8 +93,8 @@ if __name__ == '__main__':
     lamp1 = Lamp(LED1_GPIO)
     lamp2 = Lamp(LED2_GPIO)
     trigger = Button(BUTTON_GPIO)
-    cam = CamCapper(target_dir='/var/www/html',
-                    rotate=True)
+    # cam = CamCapper(target_dir='/var/www/html',
+    #                 rotate=True)
 
     try:
         while True:
@@ -103,7 +103,8 @@ if __name__ == '__main__':
             if not input_state:
                 print("Button pressed")
                 warn_message(lamp1, lamp2)
-                cam.take_snapshot()
+                # cam.take_snapshot()
+                do_blink(lamp1, 2, 0.02)
 
     except KeyboardInterrupt:
         print("Shutting down")

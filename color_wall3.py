@@ -11,6 +11,7 @@ max_color_value = 255
 delay = 0
 increment = 1
 
+
 def build_display(color):
     i = 0
     ret = []
@@ -18,6 +19,7 @@ def build_display(color):
         ret.append(color)
         i += 1
     return ret
+
 
 sense = SenseHat()
 
@@ -39,7 +41,7 @@ try:
         else:
             x -= increment
 
-        sense.set_pixels(build_display([x,0,0]))
+        sense.set_pixels(build_display([0, x, 0]))
         sleep(delay)
 
 

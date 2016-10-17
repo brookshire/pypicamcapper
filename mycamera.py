@@ -11,7 +11,7 @@ import RPi.GPIO as GPIO
 BUTTON_GPIO = 4
 LED1_GPIO = 17
 LED2_GPIO = 18
-
+FLASH_GPIO = 27
 
 class Lamp():
     state = False  # True==On, False==Off
@@ -93,6 +93,7 @@ if __name__ == '__main__':
     lamp1 = Lamp(LED1_GPIO)
     lamp2 = Lamp(LED2_GPIO)
     trigger = Button(BUTTON_GPIO)
+    flash = Lamp(FLASH_GPIO)
     # cam = CamCapper(target_dir='/var/www/html',
     #                 rotate=True)
 
@@ -102,9 +103,11 @@ if __name__ == '__main__':
 
             if not input_state:
                 print("Button pressed")
+                flash.on()
                 warn_message(lamp1, lamp2)
                 # cam.take_snapshot()
                 do_blink(lamp1, 2, 0.02)
+                flash.off()
 
     except KeyboardInterrupt:
         print("Shutting down")
